@@ -1,0 +1,3 @@
+• Rol Administrador: "Como Administrador, quiero agregar doctores (nombre y especialidad) mediante un portal en la interfaz para mantener actualizado el sistema del personal médico."
+• Rol Doctor: "Como Doctor, quiero visualizar una lista en mi panel de todas las citas y pacientes que me corresponden, para administrar inteligentemente mi tiempo de consultas."
+• Rol Paciente: "Como Paciente, quiero buscar doctores disponibles, en específico por su nombre o especialidad, y poder reservar cita dentro de un calendario funcional."
