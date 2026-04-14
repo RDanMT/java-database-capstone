@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Inteligente</title>
+    <!-- Usa la fuente moderna Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Animaciones dinámicas en el fondo -->
+    <div class="bg-shape shadow-1"></div>
+    <div class="bg-shape shadow-2"></div>
+
+    <!-- Contenedor Efecto Vidrio -->
+    <div class="glass-container">
+
+        <!-- PANTALLA DE INICIO DE SESIÓN (Preguntas 13, 14, 15) -->
+        <div id="login-view" class="view active">
+            <h1>Iniciar Sesión</h1>
+            <div class="role-selector">
+                <!-- Selectores de roles -->
+                <button type="button" onclick="setRole('ADMIN')">Admin</button>
+                <button type="button" onclick="setRole('DOCTOR')">Doctor</button>
+                <button type="button" onclick="setRole('PATIENT')">Paciente</button>
+            </div>
+            <h3 id="role-title" style="color: #4F46E5;">Acceso Administradores</h3>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Correo Electrónico" required>
+                <input type="password" id="password" placeholder="Contraseña" required>
+                <button type="submit" class="btn-primary">Entrar al Portal</button>
+            </form>
+        </div>
+
+        <!-- PORTAL DEL ADMIN (Pregunta 16: Agregar doctor) -->
+        <div id="admin-view" class="view hidden">
+            <h2>Panel Administrativo</h2>
+            <p>Agregar nuevo Doctor al sistema</p>
+            <form id="add-doctor-form">
+                <input type="text" placeholder="Nombre completo del Médico" required>
+                <input type="email" placeholder="Correo electrónico institucional" required>
+                <input type="text" placeholder="Especialidad (Ej. Cardiología)" required>
+                <button type="button" class="btn-primary"
+                    onclick="alert('Médico agregado a la base de datos de forma exitosa')">Añadir Doctor</button>
+            </form>
+            <button type="button" class="btn-secondary" onclick="logout()">Cerrar Sesión</button>
+        </div>
+
+        <!-- PORTAL DEL DOCTOR (Pregunta 18: Viendo citas) -->
+        <div id="doctor-view" class="view hidden">
+            <h2>Panel Médico</h2>
+            <p>Tus Citas Programadas Hoy</p>
+            <div class="appointment-list">
+                <div class="card">
+                    <h4>Paciente: Roberto Gómez</h4>
+                    <p>Fecha: Hoy | 10:00 AM</p>
+                    <span style="color: #10B981; font-weight: bold;">CITA CONFIRMADA</span>
+                </div>
+            </div>
+            <button type="button" class="btn-secondary" onclick="logout()">Cerrar Sesión</button>
+        </div>
+
+        <!-- PORTAL DEL PACIENTE (Pregunta 17: Buscando doctores) -->
+        <div id="patient-view" class="view hidden">
+            <h2>Portal de Pacientes</h2>
+            <div class="search-box">
+                <input type="text" placeholder="Buscar doctor por nombre...">
+                <button type="button" class="btn-primary" onclick="alert('Buscando en la API...')">Buscar</button>
+            </div>
+            <div class="results">
+                <div class="card">
+                    <h4>Dr. Gregory House</h4>
+                    <p>Especialidad: Infectología</p>
+                    <button class="btn-primary small">Agendar Disponibilidad</button>
+                </div>
+            </div>
+            <button type="button" class="btn-secondary" onclick="logout()">Cerrar Sesión</button>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

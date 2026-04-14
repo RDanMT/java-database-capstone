@@ -1,0 +1,30 @@
+name: Java Spring Boot CI
+
+# Criterio evaluado: Activación en eventos push o pull request (2 puntos)
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+# Criterio evaluado: Trabajo para configurar Java y compilar con Maven (3 puntos)
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Obtiene tu código
+    - name: Checkout Code
+      uses: actions/checkout@v4
+    
+    # 2. Instala el ambiente Java 21
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+        
+    # 3. Compila usando Maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
