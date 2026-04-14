@@ -30,4 +30,15 @@ public class TokenService {
         byte[] keyBytes = this.secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    // Servicio dedicado para validación robusta de tokens (Sugerido en Pregunta 5)
+    public boolean validateToken(String token) {
+        try {
+            String jwt = token.replace("Bearer ", "");
+            Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(jwt);
+            return true; // Token válido
+        } catch (Exception e) {
+            return false; // Token expirado o malformado
+        }
+    }
 }

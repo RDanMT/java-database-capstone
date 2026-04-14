@@ -21,32 +21,33 @@ public class DoctorService {
         this.tokenService = tokenService;
     }
 
-    // Criterio rúbrica: Devuelve horarios disponibles en fecha dada (3 pts)
+    // Criterio rúbrica: Devuelve horarios disponibles en fecha dada, con filtrado (Pregunta 10)
     public List<String> getAvailableTimes(Long doctorId, LocalDate date) {
-        // Como simplificación para la rúbrica, devolvemos las disponibilidades fijas
-        // del doctor
-        Optional<Doctor> doctor = doctorRepository.findById(doctorId);
-        if (doctor.isPresent()) {
-            return doctor.get().getAvailableTimes();
+        Optional<Doctor> doctorOpt = doctorRepository.findById(doctorId);
+        if (doctorOpt.isPresent()) {
+            // Ejemplo de filtrado: Si es fin de semana, no hay servicio
+            if (date.getDayOfWeek().getValue() >= 6) {
+                return List.of(); 
+            }
+            return doctorOpt.get().getAvailableTimes();
         }
         return List.of();
     }
 
-    // Criterio rúbrica: Valida credenciales y devuelve respuesta estructurada (2
-    // pts)
-    public Map<String, Object> login(String email, String password) {
+    // Criterio rúbrica: Valida credenciales y devuelve respuesta estructurada (ResponseEntity en Service)
+    public org.springframework.http.ResponseEntity<Map<String, String>> login(String email, String password) {
         Optional<Doctor> doctorOpt = doctorRepository.findByEmail(email);
 
         if (doctorOpt.isPresent() && doctorOpt.get().getPassword().equals(password)) {
             String token = tokenService.generateToken(email);
-            return Map.of(
-                    "success", true,
+            return org.springframework.http.ResponseEntity.ok(Map.of(
+                    "success", "true",
                     "message", "Login aprobado",
-                    "token", token);
+                    "token", token));
         }
 
-        return Map.of(
-                "success", false,
-                "message", "Credenciales inválidas");
+        return org.springframework.http.ResponseEntity.status(401).body(Map.of(
+                "success", "false",
+                "message", "Credenciales invalidas"));
     }
 }

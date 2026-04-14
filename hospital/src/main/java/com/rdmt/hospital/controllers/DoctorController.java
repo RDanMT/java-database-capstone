@@ -1,6 +1,9 @@
 package com.rdmt.hospital.controllers;
 
+import com.rdmt.hospital.models.Doctor;
+import com.rdmt.hospital.repositories.DoctorRepository;
 import com.rdmt.hospital.services.DoctorService;
+import com.rdmt.hospital.services.TokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,25 +16,28 @@ import java.util.Map;
 public class DoctorController {
 
     private final DoctorService doctorService;
+    private final DoctorRepository doctorRepository;
+    private final TokenService tokenService;
 
-    public DoctorController(DoctorService doctorService) {
+    public DoctorController(DoctorService doctorService, DoctorRepository doctorRepository, TokenService tokenService) {
         this.doctorService = doctorService;
+        this.doctorRepository = doctorRepository;
+        this.tokenService = tokenService;
     }
 
-    // Criterio Rúbrica: GET endpoint usando parámetros dinámicos (@RequestParam) (3
-    // pts)
-    @GetMapping("/availability")
+    // Criterio Rúbrica: GET endpoint usando parámetros dinámicos (@PathVariable) (Pregunta 5)
+    @GetMapping("/{userId}/availability/{doctorId}/{date}")
     public ResponseEntity<?> getAvailability(
             @RequestHeader("Authorization") String token,
-            @RequestParam Long doctorId,
-            @RequestParam String date) {
+            @PathVariable Long userId,
+            @PathVariable Long doctorId,
+            @PathVariable String date) {
 
-        // Criterio Rúbrica: Valida el token y devuelve ResponseEntity estructurado (3
-        // pts)
-        if (token == null || !token.startsWith("Bearer ")) {
+        // Criterio Rúbrica: Valida el token de manera robusta
+        if (token == null || !tokenService.validateToken(token)) {
             return ResponseEntity.status(401).body(Map.of(
                     "success", false,
-                    "error", "Token de sesión ausente o con formato incorrecto"));
+                    "error", "Token de sesión expirado o malformado"));
         }
 
         LocalDate parsedDate = LocalDate.parse(date);
@@ -39,8 +45,14 @@ public class DoctorController {
 
         return ResponseEntity.ok(Map.of(
                 "success", true,
+                "userId", userId,
                 "doctorId", doctorId,
                 "solicitedDate", date,
                 "availableTimes", times));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Doctor>> getAllDoctors() {
+        return ResponseEntity.ok(doctorRepository.findAll());
     }
 }
